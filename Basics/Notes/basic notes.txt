@@ -1,0 +1,54 @@
+                                           :::Basic Java:
+Syntax::
+class <name>
+{
+  public static void main(String args[])
+  {
+     // statements;
+  }
+}
+class is a collection of data members and members functions.
+public , private are access specifiers . public can be accessed from outside a class . private can be accessed within class.
+statci access modifer. members declared as statci can be accessed using the class name of the class. no need to create the object.
+void means no return value.
+main() entery point program execution starts from main.
+String is a class in java used to store the characters values.
+
+to print the data on the screen we are using:
+---------------------------------------------
+System.out.println()
+System--class
+out-object(static)-printwriter
+println--method
+
+to read the data from the user we are using the:
+System.console().readLine()
+System--class
+console()--static method return object
+readLine()--method
+
+this return the string read's from the user to convert into different datatype we are using:
+
+Integer.parseInt()--to convert into int.
+Float.parseFloat()--to convert to float.
+
+###--InputOutput--prog.
+----------------------------------------------------------------------------------------------------------------------
+                                            Arrays's
+										       |
+									    ----------------
+										|              |
+									  static         dynamic
+java only supports the dynamic arrays. we use new keyword for allocating the memory to the array.
+###doubleArray--multidimensional array
+
+
+
+
+
+
+
+
+
+
+
