@@ -1,0 +1,66 @@
+Programming Structure:
+================
+Parts of Java Programming:
+------------------------------
+i) Comments
+
+ii) package declaration
+iii) import statements
+
+iv) class declaration
+v) variable declarations
+vi) constructor implementations
+vii) method implementations
+
+viii) static blocks
+ix) non-static blocks
+
+Example showing java programming structure:
+---------------------------------------------------
+// Sample.java // single line comment
+package a.b; // package declaration
+import d.*; // import statements
+import e.*;
+class Sample { // class declaration
+	int a,b; // var declarations
+	Sample() { // constructor implementations
+		a=0; b=0;
+	}
+	void method1() { // method implementations
+		System.out.println("method1 called");
+	}
+}
+
+i) Comments:
+---------------
+	a) single line comment  -  //
+	b) multi-line comment  -  /* */
+	c) documentation comment  - /** */
+
+ii) package declaration & iii) import statements
+access specifiers & their scopes
+===============================
+In d:\ drive create one a folder a , inside that create one more folder b
+d:\a\b>
+
+In D:\ drive create one folder c
+d:\c>
+
+In d:\a\b>
+// A.java
+package b;
+public class A {
+	private int a; // private access specifier var; private member can be accessible only within the class, 1
+	int b; // default access specifier var; default members can be accessible within the package (sub class, instantiated class), 3
+	protected int c; 
+	// protected access specifier var; protected members can be accessible within the package and upto sub class outside the package, 4
+	public int d; // public access specifier var
+	// public members can be accessible in both within the package and outside the package, 5
+	
+	public void print() {
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(c);
+		System.out.println(d);
+	}
+}
