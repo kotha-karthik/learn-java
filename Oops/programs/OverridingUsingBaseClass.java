@@ -74,3 +74,6 @@ class pro
 		}
 	}
 }
+This is output :
+1124 aasri 1234.432000
+1105 karthik 123.432000
