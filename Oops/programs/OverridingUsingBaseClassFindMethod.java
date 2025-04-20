@@ -98,3 +98,14 @@ class pro
 		l.find(1105).print();
 	}
 }
+//output:
+//1105
+//karthik
+//123.987
+//1124
+//institute
+//234.765894
+//This is output :
+//1124 institute 234.765894
+//1105 karthik 123.987000
+//1105 karthik 123.987000
