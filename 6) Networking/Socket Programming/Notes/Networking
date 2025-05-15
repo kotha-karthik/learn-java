@@ -1,0 +1,72 @@
+Networking: Communication between one more systems over the network.
+
+Server: is a software, which takes request and gives response.
+	
+	types of servers:
+		
+		1. O.s servers : helps you to operate systems over the network.
+			1.1 unix
+			1.2 Linux
+			1.3 windows-nt
+			1.4. windows-2000
+			1.5 windows 2014
+	
+		2. Database Servers: used to store data in the form of rows and columns over the network.
+			2.1 DB2 ( IBM ).
+			2.2 Oracle (oracle).
+			2.3 Ms-sql (Microsoft)
+			2.4 MySQL (oracle)
+
+		3. Webservers: are used to access webpages over the network.
+			Tomcat
+			weblogic
+			webspeher
+			glassfish
+			MS IIS ( internet information service )
+			
+		4. com/dcom : component object model, distributed component object model. 
+			
+
+
+Client: is a software, which makes request and takes response.
+
+
+IP address: a unique id which helps you to identify a system over the network. (internet protocol address).
+
+
+protocol: is a software which has set of rules, to transfer the data over the network.
+	
+	1. tcp/ip ( transmission control protocol and internet protocol 
+	2. http 
+	3. https (hypertext transfer protocol and secured socket layer).
+	4. ftp ( file transfer protocol )
+	5. udp ( user datagram protocol ) 
+	6. smtp ( simple message transfer ).
+
+portno: is used to identify a (server/client) software in a system we need a portno.
+	
+	0 to 1000 ports are used by welknown servers.	
+
+	0 to 65535 (logical)
+
+
+socket programing.
+
+server will be waiting in a system on a particular port.
+
+client will make a request to the server program by using an ip address and a port no.
+
+once the server receives the request , server will accept the client and creates a socket object which contains client information ( ipaddress,port no,protocol ).
+
+once the server receives and creates socket object , server will also gives response to the client software, now client also creates
+a socket object which contains server information.
+
+
+
+
+
+
+
+
+
+
