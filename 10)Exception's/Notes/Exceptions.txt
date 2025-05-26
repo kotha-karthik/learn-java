@@ -1,0 +1,70 @@
+                                                Exceptions Handling
+----------------------------------------------------------------------------------------------------------------------------
+What is Exception?
+--In Java, an exception is an event that occurs during the execution of a program that disrupts the normal flow of instructions. These exceptions can occur for various reasons, such as invalid user input, file not found, or division by zero.
+## When an exception occurs, it is typically represented by an object of a subclass of the java.lang.Exception class.
+
+-- Exception Handling is a mechanism to handle runtime errors
+-- An exception normally disrupts the normal flow of the application; that is why we need to handle exceptions.
+-- The java.lang.Throwable class is the root class of Java Exception hierarchy inherited by two subclasses: Exception and Error.
+
+Types of Exceptions:
+--- 1.Checked Exception
+--- 2.UnChecked Exception
+	--- 2.1 Error
+1. Checked Exceptions
+---------------------
+Checked exceptions are the exceptions that are checked at compile-time. This means that the compiler verifies that the code handles these exceptions either by catching them or declaring them in the method signature using the throws keyword
+2. Unchecked Exceptions
+-----------------------
+Unchecked exceptions, also known as runtime exceptions, are not checked at compile-time. These exceptions usually occur due to programming errors, such as logic errors or incorrect assumptions in the code.
+2.1 Error's
+------------
+They are typically caused by issues outside the control of the application, such as system failures or resource exhaustion. 
+
+Java Exception KeyWord's
+-------------------------
+1.Try
+2.Catch
+3.Finally
+4.throw
+5.throws
+Try:
+----
+The "try" keyword is used to specify a block where we should place an exception code. It means we can't use try block alone. The try block must be followed by either catch or finally.
+Catch:
+------
+The "catch" block is used to handle the exception. It must be preceded by try block .
+Finally:
+--------
+The "finally" block is used to execute the necessary code of the program. It is executed whether an exception is handled or not.
+throw:
+------
+The "throw" keyword is used to throw an exception.
+throw's:
+--------
+The "throws" keyword is used to declare exceptions. It specifies that there may occur an exception in the method. It doesn't throw an exception. It is always used with method signature.
+
+Example::
+---------
+class Test
+{
+	public static void main String(args[])
+	{
+		try
+		{
+			int n;
+			n=50/0;
+			// In this block we will have the Exceptional code. which contains the Exception's
+		}
+		catch(ArithmeticExcepion ae)
+		{
+			System.out.println(ae);
+			// The catch block is used to catch the exception thrown by the try block and used to handle the Exception in the try block.
+		}
+		finally
+		{
+			System.out.println("This code is compulsory executed even if we get the Exceptions.");
+		}
+	}
+}
