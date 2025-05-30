@@ -1,0 +1,24 @@
+class Parent{
+    {
+    draw(5);
+    }
+    void draw(int a){
+        System.out.print("\nparent "+a);
+    }
+}
+class Child extends Parent{
+    void draw(int a){
+        System.out.print("\nchild "+a);
+    }
+}
+class Main {
+    public static void main(String[] args) {
+        Parent p=new Child();
+        p.draw(10);
+    }
+}
+/*---------------------------------------------*/
+output:
+--------
+child 5
+child 10
