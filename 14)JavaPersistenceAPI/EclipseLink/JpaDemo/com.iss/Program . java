@@ -1,0 +1,64 @@
+package com.iss;
+
+import java.util.List;
+
+import com.iss.models.StudentInfo;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
+public class Program {
+	public static void main(String args[])
+	{
+		
+		try {
+		//System.out.println(Thread.currentThread().getContextClassLoader().getResource("META-INF/persistence.xml"));
+		
+		  EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("Eclipselink_JPA");
+	      
+	      EntityManager entitymanager = emfactory.createEntityManager( );
+	      
+	      StudentInfo student=null;
+	      
+	      entitymanager.getTransaction( ).begin( );
+	      
+	      student=new StudentInfo();
+	      student.setId(1004);
+	      student.setName("srileela");
+	      student.setFee(55000);
+	      	      
+	      entitymanager.persist(student);
+	      
+	      entitymanager.getTransaction( ).commit( );
+
+	      entitymanager.getTransaction( ).begin( );
+	      
+	      student=entitymanager.find(StudentInfo.class,1001);
+	      student.setFee(36000);
+	      entitymanager.merge(student);
+
+	      entitymanager.getTransaction( ).commit( );
+
+	      entitymanager.getTransaction( ).begin( );
+	      student=entitymanager.find(StudentInfo.class,1001);
+	      
+	      entitymanager.remove(student);
+	      
+	      entitymanager.getTransaction( ).commit( );
+	      
+	      List<StudentInfo> list =entitymanager.createQuery("select sinfo from StudentInfo sinfo where sinfo.fee>35000",StudentInfo.class).getResultList();
+	      
+	      for(StudentInfo sinfo : list)
+	      {
+	    	  System.out.printf(String.format("%d %s %f\n",sinfo.getId(),sinfo.getName(),sinfo.getFee()));
+	      }
+	      
+	      entitymanager.close( );
+	      emfactory.close( );
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+}
