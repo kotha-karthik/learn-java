@@ -1,0 +1,48 @@
+1. console apps
+2. windows apps
+3. Distributed apps (rmi)
+4. web apps.
+
+
+
+console/windows apps-------> user(s) 100
+	changes
+	maintainence
+
+
+
+web apps -----> placed in a server.(tomcat)
+	
+
+
+ client software----->web browser. ( html/javascript ). (asp) active server pages (ms).
+	
+	displays in browser.
+
+	html is to generate static web pages.
+
+	dynamic web page (js)----->html----->dhtml
+	
+	js---->cant connect with database.
+
+	
+	user----->main server----->multiple servers (web garden).
+
+	
+	browser--->js------->web server(java)------->database----->data----->js--->generate html ---->browser
+
+	developer has to write lot of javascript.
+
+		jquery library (js) ---->generates html using simple functions.
+
+		binding ( one way and two ways ).
+
+		textfield<----> into variable<--------
+
+		angularjs--->angular/react
+	
+
+	
+
+	
+
