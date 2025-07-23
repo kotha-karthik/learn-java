@@ -1,0 +1,27 @@
+Session:
+	session is memory created in the server, for each user when we make first request.
+	
+	each session will have a session id.
+	
+	to access the session we need to send session id to the server for each request.
+	
+	session id will be send to the browser using a cookie.
+	
+	cookie: is a small file generated in the server and send to the client (browser) through response object.
+	
+	browser will send the cookie containing the session id to the server in the subsequent requests.
+	
+	server will take the session id from the cookie using request object and makes session available to the servlet/jsp.
+	
+	session will have time out . that means if user dont make a request for a long time then the server
+	will destroy the session. though the client have session id, cant access the session after expiration.
+	
+	if the browser missed seesion cookie then also we cant access the session.
+	
+	cookies : are two types
+	
+		1. stateless: are stored in the browser memory. once the browser is closed cookies are destroyed.
+		2. statefull : are stored on client disk. statefull cookie are created when we set cookie timeout.
+		
+		
+
