@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>hello-soap</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <!-- JAX-WS API (Jakarta) -->
+    <dependency>
+      <groupId>jakarta.xml.ws</groupId>
+      <artifactId>jakarta.xml.ws-api</artifactId>
+      <version>4.0.2</version>
+    </dependency>
+
+    <!-- Metro/JAX-WS runtime (RI) -->
+    <dependency>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-rt</artifactId>
+      <version>4.0.3</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Add this plugin ONLY if you want wsimport (Step 4). -->
+      <!-- We'll configure it later. -->
+      <plugin>
+  <groupId>com.sun.xml.ws</groupId>
+  <artifactId>jaxws-maven-plugin</artifactId>
+  <version>4.0.3</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>wsimport</goal>
+      </goals>
+      <configuration>
+        <wsdlUrls>
+          <wsdlUrl>http://localhost:8888/ws/hello?wsdl</wsdlUrl>
+        </wsdlUrls>
+        <packageName>com.example.client.stub</packageName>
+        <keep>true</keep>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+
+    </plugins>
+  </build>
+</project>
