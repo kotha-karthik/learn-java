@@ -1,0 +1,381 @@
+# JAX-RS (Jersey) on Tomcat 9 — Step‑by‑step setup (Eclipse + Maven)
+
+This document walks a user from *zero* to a working JAX‑RS (REST) app deployed on **Tomcat 9**. It assumes you are using **Eclipse** and **Maven**. It uses **Jersey 2.x (javax.\*)** which is compatible with Tomcat 9.
+
+> **Quick overview**
+>
+> 1. Create Maven `war` project in Eclipse
+> 2. Add Jersey (JAX‑RS) dependencies (Jersey 2.x)
+> 3. Create `src/main/webapp/WEB-INF/web.xml` (or use `@ApplicationPath`)
+> 4. Add resource classes (`@Path`, `@GET`, etc.)
+> 5. `mvn clean package` → generate `target/*.war`
+> 6. Copy `.war` to Tomcat 9 `webapps/` and start Tomcat
+> 7. Test with browser / curl / Postman
+
+---
+
+## Prerequisites
+
+* JDK installed (Java 17 recommended for compatibility). If you have JDK 24 installed you can still compile for Java 17 by setting the compiler plugin target to 17 in `pom.xml`.
+* Eclipse IDE with Maven support (or any IDE where you can run Maven).
+* Apache Tomcat **9.x** installed and configured.
+* Maven (optional if you use Eclipse’s embedded maven).
+
+---
+
+## 1. Create the Maven web project in Eclipse
+
+1. `File → New → Maven Project` → select **Create a simple project (skip archetype)** → Next.
+2. Enter:
+
+   * Group Id: `com.example`
+   * Artifact Id: `jaxrs-tomcat-demo`
+   * Packaging: `war`
+   * Version: leave default
+3. Finish. Eclipse creates a Maven project skeleton.
+
+> If you previously created a Dynamic Web Project, you can also convert it to Maven: `Right-click project → Configure → Convert to Maven Project` and set `<packaging>war</packaging>`.
+
+---
+
+## 2. Replace/Update `pom.xml`
+
+Use this `pom.xml` (copy & paste). It is configured for Jersey 2.x (javax), JSON via Jackson, and `maven-war-plugin`.
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.example</groupId>
+  <artifactId>jaxrs-tomcat-demo</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <jersey.version>2.35</jersey.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <!-- Jersey 2 (javax) servlet -->
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-servlet</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+
+    <!-- HK2 injection -->
+    <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+
+    <!-- JSON support (Jackson) -->
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Compiler plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+
+      <!-- WAR plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+
+Save `pom.xml`. Then **Right-click → Maven → Update Project** (to download dependencies).
+
+---
+
+## 3. Create webapp folder & web.xml
+
+Maven webapps expect `src/main/webapp` and `WEB-INF` inside it.
+
+1. Create folder: `src/main/webapp/WEB-INF/`
+2. Create `web.xml` at `src/main/webapp/WEB-INF/web.xml` with this content:
+
+```xml
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                             http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+  <display-name>JAX-RS Jersey App</display-name>
+
+  <servlet>
+    <servlet-name>jersey-servlet</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+    <init-param>
+      <param-name>jersey.config.server.provider.packages</param-name>
+      <param-value>com.example.jaxrs.resources</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>jersey-servlet</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
+```
+
+> Note: If you prefer annotations only, you can create a `MyApplication` class with `@ApplicationPath("/api")` and omit servlet mapping. The `web.xml` approach is explicit and works reliably.
+
+---
+
+## 4. Add Java packages and classes
+
+Create the following package structure: `src/main/java/com/example/jaxrs/...`
+
+### 4.1 `MyApplication` (optional)
+
+If you want annotation-based activation instead of web.xml mapping:
+
+```java
+package com.example.jaxrs;
+
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+
+@ApplicationPath("/api")
+public class MyApplication extends Application {}
+```
+
+> If you use `MyApplication`, remove or adapt web.xml mapping to avoid duplicate registration.
+
+### 4.2 `HelloResource.java`
+
+`src/main/java/com/example/jaxrs/resources/HelloResource.java`
+
+```java
+package com.example.jaxrs.resources;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+@Path("/hello")
+public class HelloResource {
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String sayHello() {
+        return "hello welcome to rest";
+    }
+}
+```
+
+### 4.3 `Student` model (optional)
+
+`src/main/java/com/example/jaxrs/model/Student.java`
+
+```java
+package com.example.jaxrs.model;
+
+public class Student {
+    private int id;
+    private String name;
+
+    public Student() {}
+    public Student(int id, String name) { this.id = id; this.name = name; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+}
+```
+
+### 4.4 `StudentResource.java` (optional)
+
+`src/main/java/com/example/jaxrs/resources/StudentResource.java`
+
+```java
+package com.example.jaxrs.resources;
+
+import com.example.jaxrs.model.Student;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+
+@Path("/students")
+public class StudentResource {
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student getStudent(@PathParam("id") int id) {
+        return new Student(id, "Karthik");
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student createStudent(Student s) {
+        // echo back (no DB in this example)
+        return s;
+    }
+}
+```
+
+---
+
+## 5. Build the WAR
+
+From project root (where `pom.xml` is):
+
+```bash
+mvn clean package
+```
+
+Expected output includes a line like:
+
+```
+[INFO] Building war: /.../target/jaxrs-tomcat-demo-1.0-SNAPSHOT.war
+[INFO] BUILD SUCCESS
+```
+
+If you are in Eclipse: `Right-click project → Run As → Maven build...` → Goals: `clean package` → Run.
+
+If Eclipse does not show the new `target/` contents, **right-click project → Refresh (F5)**.
+
+---
+
+## 6. Deploy WAR to Tomcat 9
+
+1. Copy the generated WAR file:
+
+   ```
+   target/jaxrs-tomcat-demo-1.0-SNAPSHOT.war
+   ```
+
+   into your Tomcat 9 `webapps/` folder, e.g. `D:\apache-tomcat-9.x\webapps\`.
+2. Start Tomcat (if not already running):
+
+   * Windows: `bin\startup.bat`
+   * Linux/macOS: `bin/startup.sh`
+3. Tomcat will extract the WAR into `webapps/jaxrs-tomcat-demo-1.0-SNAPSHOT/`.
+
+---
+
+## 7. Test endpoints (browser, curl, Postman)
+
+Assuming WAR name = `jaxrs-tomcat-demo-1.0-SNAPSHOT` and servlet mapping `/api/*`:
+
+* Hello (GET):
+
+  ```
+  http://localhost:8080/jaxrs-tomcat-demo-1.0-SNAPSHOT/api/hello
+  ```
+
+  Expected: `hello welcome to rest` (plain text).
+
+* Get student (GET):
+
+  ```
+  http://localhost:8080/jaxrs-tomcat-demo-1.0-SNAPSHOT/api/students/1
+  ```
+
+  Expected JSON: `{"id":1,"name":"Karthik"}`
+
+* Create student (POST):
+
+  ```bash
+  curl -X POST \
+    http://localhost:8080/jaxrs-tomcat-demo-1.0-SNAPSHOT/api/students \
+    -H "Content-Type: application/json" \
+    -d '{"id":2,"name":"Aasritha"}'
+  ```
+
+  Expected: echo JSON back.
+
+**Postman**:
+
+* Create a new request → PUT method if needed or POST → URL above.
+* For POST: choose **Body → raw → JSON** and provide JSON payload.
+* Click **Send** → inspect response body & status.
+
+---
+
+## 8. Common troubleshooting & fixes
+
+* **404 Not Found**
+
+  * Confirm Tomcat extracted your WAR: `webapps/<war-folder>/` exists.
+  * Check context path (WAR file name is context root unless overridden).
+  * Confirm URL path: `/context/api/hello` (context = WAR name without `.war`).
+  * Look at `logs/catalina.out` (Tomcat logs) for deployment errors.
+
+* **500 / Servlet.init() exceptions**
+
+  * Usually missing Jersey jars (e.g., `jersey-hk2`). Verify `WEB-INF/lib` inside WAR contains required JARs.
+  * If you see `InjectionManagerFactory not found` → `jersey-hk2` missing.
+  * Rebuild (`mvn clean package`) and redeploy.
+
+* **ClassNotFoundException: jakarta.ws.rs.Path**
+
+  * That indicates your code or library uses `jakarta.*`. On Tomcat 9 you must use `javax.*` and Jersey 2.x. Replace imports and rebuild.
+
+* **Eclipse not showing target/**
+
+  * Right-click project → Refresh (F5).
+  * Check Project Explorer filters and uncheck `target` if filtered.
+
+* **If using JDK 24**
+
+  * You can compile for Java 17 by setting `<maven.compiler.source>` and `<maven.compiler.target>` to `17`. If you want to compile to 24, set both to `24` and ensure your Maven toolchain and plugin versions support that.
+
+---
+
+## 9. Extra tips
+
+* If you prefer quick iteration, add the project to Eclipse Servers view and use **Run on Server** — Eclipse will deploy to `wtpwebapps` and let you hot-redeploy on changes.
+* If you want to use annotation-only config, use `@ApplicationPath("/api")` and omit `web.xml` servlet mapping.
+* For production, consider building a proper `context.xml` or rename the WAR to the desired context root.
+
+---
+
+## 10. Files summary (copy-paste list)
+
+* `pom.xml` (shown earlier)
+* `src/main/webapp/WEB-INF/web.xml` (shown earlier)
+* `src/main/java/com/example/jaxrs/resources/HelloResource.java`
+* `src/main/java/com/example/jaxrs/resources/StudentResource.java` (optional)
+* `src/main/java/com/example/jaxrs/model/Student.java` (optional)
+
+---
+
+If you want, I can:
+
+* Produce a downloadable starter ZIP with these files ready-to-import into Eclipse.
+* Convert this guide into a one‑page PDF for sharing.
+
+Tell me which of these you want next.
