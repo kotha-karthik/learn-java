@@ -39,9 +39,7 @@ class Drawing
 		this.shape.draw();
 	}
 }
-
-
-class program
+class Main
 {
 	public static void main(String args[])
 	{
@@ -68,3 +66,4 @@ class program
 		
 	}
 }
+// spring ioc
