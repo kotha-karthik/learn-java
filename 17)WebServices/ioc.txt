@@ -1,0 +1,70 @@
+dependency injection or inversion of control (IOC container).
+
+//polymorphism
+
+interface Shape
+{
+	void draw();
+} 
+
+class Circle implements Shape
+{
+	public void draw()
+	{
+		System.out.println("Circle");
+	}
+}
+
+class Rectangle implements Shape
+{
+	public void draw()
+	{
+		System.out.println("Rectangle");
+	}
+}
+
+class Drawing
+{
+	private Shape	shape;
+	
+	public Drawing(Shape shape)
+	{
+		this.shape=shape;
+	}
+	
+	
+	
+	public void draw()
+	{
+		this.shape.draw();
+	}
+}
+
+
+class program
+{
+	public static void main(String args[])
+	{
+		Shape	shape;
+		
+		shape=new Circle();
+		shape.draw();
+		
+		shape=new Rectangle();
+		shape.draw();
+		
+		Drawing d=new Drawing(); //factory pattern.
+		
+		//spring configuaration 
+		//beans.xml
+		
+		//spring container
+		
+		
+		d.draw();
+		
+		d.setShape(new Circle())
+		d.draw();
+		
+	}
+}
